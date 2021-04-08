@@ -129,7 +129,8 @@ public class FormLogin extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, output);
             
             if(output.equalsIgnoreCase("TRUE")){
-                FormMenu formMenu = new FormMenu();
+                FormMenu formMenu = new FormMenu(socket, username);
+                formMenu.setVisible(true);
             }
         } catch (Exception e) {
             System.out.println("Error Login : " + e);

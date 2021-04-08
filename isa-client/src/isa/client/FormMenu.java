@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -17,17 +18,29 @@ import java.net.Socket;
 public class FormMenu extends javax.swing.JFrame {
 
     Socket socket;
-    
+
+    BufferedReader in;
+    DataOutputStream out;
+
+    String userLogin;
+
     public FormMenu() {
         initComponents();
     }
-    
-    public FormMenu(Socket socket) {
+
+    public FormMenu(Socket socket, String userLogin) {
         initComponents();
 
         this.socket = socket;
+        this.userLogin = userLogin;
+        
+        try {
+            in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+            out = new DataOutputStream(this.socket.getOutputStream());
+        } catch (Exception e) {
+            System.out.println("Error Constructor : " + e);
+        }
     }
-
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -49,6 +62,11 @@ public class FormMenu extends javax.swing.JFrame {
         });
 
         btnMenuInfoSaldo.setText("INFO SALDO");
+        btnMenuInfoSaldo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMenuInfoSaldoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -60,7 +78,7 @@ public class FormMenu extends javax.swing.JFrame {
                     .addComponent(btnMenuInfoSaldo)
                     .addComponent(btnMenuTransfer)
                     .addComponent(jLabel1))
-                .addContainerGap(285, Short.MAX_VALUE))
+                .addContainerGap(229, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -71,7 +89,7 @@ public class FormMenu extends javax.swing.JFrame {
                 .addComponent(btnMenuTransfer)
                 .addGap(18, 18, 18)
                 .addComponent(btnMenuInfoSaldo)
-                .addContainerGap(76, Short.MAX_VALUE))
+                .addContainerGap(73, Short.MAX_VALUE))
         );
 
         pack();
@@ -79,8 +97,23 @@ public class FormMenu extends javax.swing.JFrame {
 
     private void btnMenuTransferActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuTransferActionPerformed
         // TODO add your handling code here:
+        FormTransfer f = new FormTransfer(this.socket, this.userLogin);
+        f.setVisible(true);
     }//GEN-LAST:event_btnMenuTransferActionPerformed
 
+    private void btnMenuInfoSaldoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuInfoSaldoActionPerformed
+        // TODO add your handling code here:
+        String command = "INFOSALDO" + "[_]" + userLogin;
+
+        try {
+            out.writeBytes(command + "\n");
+
+            String output = in.readLine();
+            JOptionPane.showMessageDialog(rootPane, output);
+        } catch (Exception e) {
+            System.out.println("Error Info Saldo : " + e);
+        }
+    }//GEN-LAST:event_btnMenuInfoSaldoActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */

@@ -25,16 +25,16 @@ public class FormServer extends javax.swing.JFrame implements Runnable {
     public FormServer() {
         initComponents();
         try {
-            
+
             serverSocket = new ServerSocket(6000);
-            
+
             System.out.println("Waiting for Client...");
             socket = serverSocket.accept();
             System.out.println("Client Accepted!");
 
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new DataOutputStream(socket.getOutputStream());
-            
+
             this.start();
         } catch (Exception e) {
             System.out.println("Error Form Server : " + e);
@@ -47,18 +47,26 @@ public class FormServer extends javax.swing.JFrame implements Runnable {
         String password;
         String name;
         String pin;
+        String age;
+        String phoneNumber;
+        String destination;
+        String nominal;
+        String news;
         String account_number;
         int balance;
-        
+        String timestamp;
+
         while (true) {
             try {
                 String rawInput = in.readLine();
-                txtConversation.append(rawInput);
+                txtConversation.append(rawInput + "\n");
 
                 String[] clientInput = rawInput.split("\\[\\_\\]");
                 String respond = "";
 
                 User __user = new User();
+                Transaction __transaction = new Transaction();
+                Account __account = new Account();
                 switch (clientInput[0]) {
                     case "LOGIN":
                         username = clientInput[1];
@@ -66,18 +74,26 @@ public class FormServer extends javax.swing.JFrame implements Runnable {
                         respond = __user.Login(username, password); //return TRUE or FALSE
                         break;
                     case "REGISTER":
-                        username = clientInput[1];
-                        password = clientInput[2];
-                        name = clientInput[3];
-                        pin = clientInput[4];
-                        
-                        respond = __user.Register(username, password, name, pin); //return TRUE or FALSE
+                        name = clientInput[1];
+                        age = clientInput[2];
+                        phoneNumber = clientInput[3];
+                        username = clientInput[4];
+                        password = clientInput[5];
+                        pin = clientInput[6];
+
+                        respond = __user.Register(name, age, phoneNumber, username, password, pin); //return TRUE or FALSE
                         break;
                     case "INFOSALDO":
-                        respond = "Info Saldo";
+                        username = clientInput[1];
+                        respond = __account.InfoSaldo(username);
                         break;
                     case "TRANSFER":
-                        respond = "Transfer";
+                        username = clientInput[1];
+                        destination = clientInput[2];
+                        nominal = clientInput[3];
+                        news = clientInput[4];
+                        timestamp = clientInput[5];
+                        respond = __transaction.Transfer(username, destination, nominal, news, timestamp);
                         break;
                     case "CHECKSALDO":
                         respond = "Try to Check Saldo";

@@ -15,7 +15,9 @@ import java.net.*;
 public class FormServer extends javax.swing.JFrame implements Runnable {
 
     Thread thread;
-
+    String keyAES = "Ha^#Sdb$18Lg1+_~J=_is8g$21a12";
+    String privateKeyServer = "MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAKAUZV+tjiNBKhlBZbKBnzeugpdYPhh5PbHanjV0aQ+LF7vetPYhbTiCVqA3a+Chmge44+prlqd3qQCYra6OYIe7oPVq4mETa1c/7IuSlKJgxC5wMqYKxYydb1eULkrs5IvvtNddx+9O/JlyM5sTPosgFHOzr4WqkVtQ71IkR+HrAgMBAAECgYAkQLo8kteP0GAyXAcmCAkA2Tql/8wASuTX9ITD4lsws/VqDKO64hMUKyBnJGX/91kkypCDNF5oCsdxZSJgV8owViYWZPnbvEcNqLtqgs7nj1UHuX9S5yYIPGN/mHL6OJJ7sosOd6rqdpg6JRRkAKUV+tmN/7Gh0+GFXM+ug6mgwQJBAO9/+CWpCAVoGxCA+YsTMb82fTOmGYMkZOAfQsvIV2v6DC8eJrSa+c0yCOTa3tirlCkhBfB08f8U2iEPS+Gu3bECQQCrG7O0gYmFL2RX1O+37ovyyHTbst4s4xbLW4jLzbSoimL235lCdIC+fllEEP96wPAiqo6dzmdH8KsGmVozsVRbAkB0ME8AZjp/9Pt8TDXD5LHzo8mlruUdnCBcIo5TMoRG2+3hRe1dHPonNCjgbdZCoyqjsWOiPfnQ2Brigvs7J4xhAkBGRiZUKC92x7QKbqXVgN9xYuq7oIanIM0nz/wq190uq0dh5Qtow7hshC/dSK3kmIEHe8z++tpoLWvQVgM538apAkBoSNfaTkDZhFavuiVl6L8cWCoDcJBItip8wKQhXwHp0O3HLg10OEd14M58ooNfpgt+8D8/8/2OOFaR0HzA+2Dm";
+    String publicKeyClient = "MIIBKzANBgkqhkiG9w0BAQEFAAOCARgAMIIBEwKCAQoSBpIc3Y8I2cnHdZhnx1WDSJX4/eV9lUf6keNEEPVM2U0ylkosam+CDqua6I53YQdjnjsQVbzEtz+2XGRR6mOg8ckUKH471y6DnnWEZ9n4ni8Y8Y9lQXfq0kbSULTwGMQRQusn8Ac6iHAXo//m7K/pSGBhjIEIdycFZIQEjBRr7Gbtuo0n0AD/rBu7Fuct6/sf2KyOvHA+wD3/KZqxAA7DyWMkMJ6HBh9lbavczxi3j61iRqvLAM5O6Ia2WzLI3YofwsuCx1d/yTH0pcYePkHVL2+Viws64PgPe6N/rPwaeNh94F7ipGEEhJEMHerSgqThf08d1pWu7QNrRPkWCJ6zjaljoLTsKeUKgwIDAQAB";
     Socket socket;
     ServerSocket serverSocket;
 
@@ -55,6 +57,7 @@ public class FormServer extends javax.swing.JFrame implements Runnable {
         String account_number;
         int balance;
         String timestamp;
+        String salt;
 
         while (true) {
             try {
@@ -71,6 +74,10 @@ public class FormServer extends javax.swing.JFrame implements Runnable {
                     case "LOGIN":
                         username = clientInput[1];
                         password = clientInput[2];
+                        System.out.println("77");
+                        username = Security.Decrypt2(username, keyAES, privateKeyServer);
+                        password = Security.Decrypt2(password, keyAES, privateKeyServer);
+                        
                         respond = __user.Login(username, password); //return TRUE or FALSE
                         break;
                     case "REGISTER":
@@ -80,11 +87,17 @@ public class FormServer extends javax.swing.JFrame implements Runnable {
                         username = clientInput[4];
                         password = clientInput[5];
                         pin = clientInput[6];
-
-                        respond = __user.Register(name, age, phoneNumber, username, password, pin); //return TRUE or FALSE
+                        salt = clientInput[7];
+                        System.out.println("91");
+                        username = Security.Decrypt2(username, keyAES, privateKeyServer);
+                        
+                        respond = __user.Register(name, age, phoneNumber, username, password, pin,salt); //return TRUE or FALSE
                         break;
                     case "INFOSALDO":
                         username = clientInput[1];
+                        
+                        username = Security.Decrypt2(username, keyAES, privateKeyServer);
+                        
                         respond = __account.InfoSaldo(username);
                         break;
                     case "TRANSFER":
@@ -93,6 +106,13 @@ public class FormServer extends javax.swing.JFrame implements Runnable {
                         nominal = clientInput[3];
                         news = clientInput[4];
                         timestamp = clientInput[5];
+                        
+                        username = Security.Decrypt2(username, keyAES, privateKeyServer);
+                        destination = Security.Decrypt2(destination, keyAES, privateKeyServer);
+                        news = Security.Decrypt2(news, keyAES, privateKeyServer);
+                        nominal = Security.Decrypt2(nominal, keyAES, privateKeyServer);
+                        
+                        
                         respond = __transaction.Transfer(username, destination, nominal, news, timestamp);
                         break;
                     case "CHECKSALDO":
@@ -104,7 +124,13 @@ public class FormServer extends javax.swing.JFrame implements Runnable {
                     default:
                         break;
                 }
+                
+                
+                
                 System.out.println(respond);
+                
+                respond = Security.Encrypt2(respond, keyAES, publicKeyClient);
+                
                 out.writeBytes(respond + "\n");
 
             } catch (Exception e) {

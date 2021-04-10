@@ -18,7 +18,7 @@ public class MyConnection {
     public Connection getConnect() {
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
-            this.connect = DriverManager.getConnection("jdbc:mysql://localhost/uts_isa", "root", "mysql");
+            this.connect = DriverManager.getConnection("jdbc:mysql://localhost/uts_isa", "root", "");
         } catch (Exception e) {
             System.out.println(e);
         }

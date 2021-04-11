@@ -16,6 +16,7 @@ import javax.swing.JOptionPane;
 public class FormRegister extends javax.swing.JFrame {
 
     String keyAES = "Ha^#Sdb$18Lg1+_~J=_is8g$21a12";
+    String saltDefault = "hzVZ09jPyqbBUGPW6cPtSw==";
     String publicKeyServer = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCgFGVfrY4jQSoZQWWygZ83roKXWD4YeT2x2p41dGkPixe73rT2IW04glagN2vgoZoHuOPqa5and6kAmK2ujmCHu6D1auJhE2tXP+yLkpSiYMQucDKmCsWMnW9XlC5K7OSL77TXXcfvTvyZcjObEz6LIBRzs6+FqpFbUO9SJEfh6wIDAQAB";
     String privateKeyClient = "MIIE5gIBADANBgkqhkiG9w0BAQEFAASCBNAwggTMAgEAAoIBChIGkhzdjwjZycd1mGfHVYNIlfj95X2VR/qR40QQ9UzZTTKWSixqb4IOq5rojndhB2OeOxBVvMS3P7ZcZFHqY6DxyRQofjvXLoOedYRn2fieLxjxj2VBd+rSRtJQtPAYxBFC6yfwBzqIcBej/+bsr+lIYGGMgQh3JwVkhASMFGvsZu26jSfQAP+sG7sW5y3r+x/YrI68cD7APf8pmrEADsPJYyQwnocGH2Vtq9zPGLePrWJGq8sAzk7ohrZbMsjdih/Cy4LHV3/JMfSlxh4+QdUvb5WLCzrg+A97o3+s/Bp42H3gXuKkYQSEkQwd6tKCpOF/Tx3Wla7tA2tE+RYInrONqWOgtOwp5QqDAgMBAAECggEKEASixt/kAVt3wbWwT1iFlvpjuzX0P1ru8a2+pXfkY/wea7u+AiY7HPnoaOoL3+3rYQz1M5jc/HpTNbx4sYp2KklyBGXPd2HKxc+EYrreqd33wFS4tqQs6hEeOjrZ7xoy8Zvj2EOmSM+BvKBSAWWHFOjqLQVsjJdFp7cg0eGhLB6RgOPsF08SfGhhIftkYBQ+R4NGhwB5n2BTqW1b15vOBzkZWk9Mjc8egx0smUAw9FMPkI73o9QB9YyqafdmTBkmc/mzoVvshjF/PG5/Y+rhXAyPEuwPaUgWtivfl6yzQyjg/M55Q9iwxG6eRiFnp48mKp/Zbx4610R9QkCxb2v/Vtu5bMWqnWDIrOECgYV2cH47yCH4rzTjgzu0oBKIN8Tr4vGkqfP8Z3haOnoy5t9bOlHE0836qm3VLs4Ls5FdFXATkcmFqtlEC8Q5pgTvwjVGvhXvFdhhU5gh/LcxbUHXV1/6d65J8L3vIzUIugHJC5D6co0t6FEmJCjyUcMMNhPt0UN1g8+0r2rHg4FPSLZ/HoHLAoGFJvYhBLqxz6N4CpOjZK8MOxxDvE5rpUCdHsbjB7Kj/g51G+iFpJKTpgK/e180LAXvuNldpYtWGH6pwOLLrfePX9WitveBbZaDDz0jYbXctblp+/34nLmMP8lLPFDaCVnXZbWgIf1HOiZIU8hoaoJUrpDrU+0ajZEtsBD+9vCLNPwfQFqjKQKBhQMZcIQ5+YGbfCPUBFT2t2VvKC0QFEi91c+uGX0q+JWqav/lJ8yhyksb+KHShrvRqCUqcXNhpkdkMClSsYDcslZf26sNQF+wT6hEWr/Q8C5P8KAk/jL8vMfcj+vZHQMscu2C6vlS1BT2dmEsIxIsR5FjPORFTKGfoGjXClFMRK8BdR0gfD8CgYUfFLAIbsrUQqrLfTWWZ1JRgV3Dxad3/9CXsb+A75CFZpEjv12FiOzCPWT1jWA4UlAHXVeobTw0dC8FUad8U4YLxIh2f4G/o5dPu80S8JpuWchjnxoKJLbuV61uI22ckhAT8k0ZcEy25b1DIRezB994FuG0ZOyOzKbu0tAivIfAr/RaSTPpAoGFELDjlCwkhRfWFP0+icBDJ4iqrJ900uOuH3wQmy7Yfmily/+C50FDQ+ZWnMVcu33i0xvU7g103rLkB4rWpzckUACf2x1sVJ+d3g75/E5lfTu8QaB2q5niiENWMfI52YhBPboDT9G+7OTPuSIE9T4BW326/6gQwFJUxYv1CYBGficKqyhROw==";
     Socket socket;
@@ -188,25 +189,42 @@ public class FormRegister extends javax.swing.JFrame {
         String age = txtAge.getText();
         String phoneNumber = txtPhoneNumber.getText();
         
+        
         String username = txtUsername.getText();
         String password = String.valueOf(txtPassword.getPassword());
         String pin = String.valueOf(txtPin.getPassword());
+        
+        String salt = Security.MakeSalt();
+        System.out.println("198 : " + salt);
+        
+        salt = Security.Encrypt2(salt, keyAES, publicKeyServer);
+                
+        String nameHash = Security.Encrypt3(age, keyAES, saltDefault, publicKeyServer);
+        String ageHash = Security.Encrypt3(name, keyAES, saltDefault, publicKeyServer);
+        String phoneHash = Security.Encrypt3(phoneNumber, keyAES, saltDefault, publicKeyServer);
+        String usernameHash = Security.Encrypt3(username, keyAES, saltDefault, publicKeyServer);
+        String passwordHash = Security.Encrypt3(password, keyAES, saltDefault, publicKeyServer);
+        String pinHash = Security.Encrypt3(pin, keyAES, saltDefault, publicKeyServer);
         
         
         
         name = Security.Encrypt2(name, keyAES, publicKeyServer);
         age = Security.Encrypt2(age, keyAES, publicKeyServer);
         phoneNumber = Security.Encrypt2(phoneNumber, keyAES, publicKeyServer);
+        username = Security.EncryptAES(username, keyAES);
+        password = Security.Encrypt2(password, keyAES, publicKeyServer);
+        pin = Security.Encrypt2(pin, keyAES, publicKeyServer);
         
-        String salt = Security.MakeSalt();
+                
         
-        username = Security.Encrypt3(username, keyAES, salt, publicKeyServer);
-        password = Security.Encrypt3(password, keyAES, salt, publicKeyServer);
-        pin = Security.Encrypt3(pin, keyAES, salt, publicKeyServer);
         
+               
+        System.out.println(usernameHash);
+        System.out.println(passwordHash);
+        System.out.println(pinHash);
         
 
-        //Encrypt and Hash the username and password here
+       // Encrypt and Hash the username and password here
         String command = "REGISTER"
                 + "[_]" + name
                 + "[_]" + age
@@ -214,7 +232,16 @@ public class FormRegister extends javax.swing.JFrame {
                 + "[_]" + username
                 + "[_]" + password
                 + "[_]" + pin
-                + "[_]" + salt;
+                + "[_]" + salt
+                + "[_]" + usernameHash
+                + "[_]" + passwordHash
+                + "[_]" + pinHash
+                + "[_]" + ageHash
+                + "[_]" + nameHash
+                + "[_]" + phoneHash;
+        
+        
+        
 
         try {
             out.writeBytes(command + "\n");

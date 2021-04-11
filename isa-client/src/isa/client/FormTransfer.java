@@ -30,7 +30,7 @@ public class FormTransfer extends javax.swing.JFrame {
     DataOutputStream out;
     
     String username;
-
+    
     public FormTransfer() {
         initComponents();
     }

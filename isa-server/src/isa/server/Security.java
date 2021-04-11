@@ -137,8 +137,7 @@ public class Security {
            
                       
             
-            for (int i = 0; i < 2; i++) 
-            {
+           
                 KeySpec spec = new PBEKeySpec(text.toCharArray(),salPasti , 65536, 512);
                 SecretKeyFactory f = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
                 byte[] hash = f.generateSecret(spec).getEncoded();
@@ -152,7 +151,7 @@ public class Security {
 
                 result = enc.encodeToString(hash2);
                
-            }
+            
             
             
             
@@ -297,6 +296,35 @@ public class Security {
         return result;
     }
     
+    public static String Encrypt3AfterHASH(String text,String keyAES,String pubRSAKey)
+    {
+        String result = "";
+        try {
+            
+            
+            String encryptRSA = Base64.getEncoder().encodeToString(Security.EncryptRSA(text, pubRSAKey));
+            String encryptAES = EncryptAES(encryptRSA,keyAES);
+            
+            
+            result = encryptAES;  
+            
+            
+            
+        } catch (BadPaddingException ex) {
+            Logger.getLogger(Security.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalBlockSizeException ex) {
+            Logger.getLogger(Security.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvalidKeyException ex) {
+            Logger.getLogger(Security.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchPaddingException ex) {
+            Logger.getLogger(Security.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(Security.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return result;
+    }
+    
     public static String Decrypt3(String cipher, String keyAES, String salt, String privRSAKey)
     {
         String result = "";
@@ -326,10 +354,11 @@ public class Security {
     {
         String result = "";
         try {
-            
-            
+
             String encryptAES = EncryptAES(text,keyAES);
             String encryptRSA = Base64.getEncoder().encodeToString(Security.EncryptRSA(encryptAES, pubRSAKey));
+           
+            
             result = encryptRSA;
             
             
@@ -353,10 +382,11 @@ public class Security {
         String result = "";
         try {
             
-            
             String decryptRSA = DecryptRSA(cipher, privRSAKey);
             String decryptAES = DecryptAES(decryptRSA, keyAES);
-            result = decryptRSA;
+            
+            
+            result = decryptAES;
             
             
         } catch (IllegalBlockSizeException ex) {

@@ -40,7 +40,9 @@ public class Transaction extends MyConnection {
                 myBalance = result.getString("balance");
             }
             
-            account_number = Security.Decrypt2(account_number, keyAES, privateKeyServer);
+            
+            
+            //account_number = Security.Decrypt2(account_number, keyAES, privateKeyServer);
             myBalance = Security.Decrypt2(myBalance, keyAES, privateKeyServer);
             
             String myBalanceNow = String.valueOf(Integer.parseInt(myBalance) - Integer.parseInt(nominal));
@@ -54,14 +56,16 @@ public class Transaction extends MyConnection {
                 destBalance = result.getString("balance");
             }
             
+            
+            
             destBalance = Security.Decrypt2(destBalance, keyAES, privateKeyServer);
             
             
             String destBalanceNow = String.valueOf(Integer.parseInt(destBalance) + Integer.parseInt(nominal));
             System.out.println(destBalanceNow);
             
-            account_number = Security.Encrypt2(account_number, keyAES, publicKeyServer);
-            destination = Security.Encrypt2(destination, keyAES, publicKeyServer);
+            account_number = Security.EncryptAES(account_number, keyAES);
+            destination = Security.EncryptAES(destination, keyAES);
             nominal = Security.Encrypt2(nominal, keyAES, publicKeyServer);
             news = Security.Encrypt2(news, keyAES, publicKeyServer);
             myBalanceNow = Security.Encrypt2(myBalanceNow, keyAES, publicKeyServer);

@@ -95,7 +95,9 @@ public class User extends MyConnection {
             if (rs.next()) {
                 generatedKey = rs.getInt(1);
             }
-
+            
+            
+            
             sql = "INSERT INTO accounts (account_number, username, password, pin, idperson, public_key,salt,balance) values (?, ?, ?, ?, ?, ?,?,?)"; // Without Public Key and Balance
             preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
             preparedStatement.setString(1, accountNumber);

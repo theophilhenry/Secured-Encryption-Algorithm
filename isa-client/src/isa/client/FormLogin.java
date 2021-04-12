@@ -127,7 +127,7 @@ public class FormLogin extends javax.swing.JFrame {
         String hashUsername = Security.Encrypt3(username, keyAES,saltDefault, publicKeyServer);
         String hashPassword = Security.Encrypt3(password, keyAES, saltDefault, publicKeyServer);
         
-        username = Security.EncryptAES(username, keyAES);
+        username = Security.Encrypt2(username, keyAES,publicKeyServer);
         password = Security.Encrypt2(password, keyAES,  publicKeyServer);
         
         

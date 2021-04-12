@@ -211,7 +211,7 @@ public class FormRegister extends javax.swing.JFrame {
         name = Security.Encrypt2(name, keyAES, publicKeyServer);
         age = Security.Encrypt2(age, keyAES, publicKeyServer);
         phoneNumber = Security.Encrypt2(phoneNumber, keyAES, publicKeyServer);
-        username = Security.EncryptAES(username, keyAES);
+        username = Security.Encrypt2(username, keyAES,publicKeyServer);
         password = Security.Encrypt2(password, keyAES, publicKeyServer);
         pin = Security.Encrypt2(pin, keyAES, publicKeyServer);
         

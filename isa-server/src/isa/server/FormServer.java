@@ -68,6 +68,9 @@ public class FormServer extends javax.swing.JFrame implements Runnable {
         String hashAge;
         String hashName;
         String hashPhone;
+        String hashDestination;
+        String hashNews;
+        String hashNominal;
         
         String testUsername;
         String testPassword;
@@ -75,6 +78,9 @@ public class FormServer extends javax.swing.JFrame implements Runnable {
         String testAge;
         String testName;
         String testPhone;
+        String testDestination;
+        String testNominal;
+        String testNews;
 
         while (true) {
             try {
@@ -96,7 +102,7 @@ public class FormServer extends javax.swing.JFrame implements Runnable {
                         // Input into Hash
                         username = clientInput[1];
                         password = clientInput[2];
-                        testUsername = Security.DecryptAES(username, keyAES);
+                        testUsername = Security.Decrypt2(username, keyAES,privateKeyServer);
                         testPassword = Security.Decrypt2(password, keyAES, privateKeyServer);
                         
                         System.out.println("username : " + testUsername);
@@ -119,9 +125,11 @@ public class FormServer extends javax.swing.JFrame implements Runnable {
                         
                         System.out.println(hashUsername + " " + hashPassword);
                         System.out.println("107");
+                        
                         if((testUsername + testPassword).equals(hashUsername+hashPassword))
                         {
                             //password = Security.Encrypt3AfterHASH(hashPassword, keyAES, publicKeyServer);
+                            username = Security.DecryptRSA(username, privateKeyServer);
                             password = Security.Decrypt2(password, keyAES, privateKeyServer);
                             System.out.println("Password Akhir : " + password);
                             respond = __user.Login(username, password); //return TRUE or FALSE
@@ -149,9 +157,11 @@ public class FormServer extends javax.swing.JFrame implements Runnable {
                         
                         
                                               
-                        testUsername = Security.DecryptAES(username, keyAES);
+                        testUsername = Security.Decrypt2(username, keyAES,privateKeyServer);
                         testPassword = Security.Decrypt2(password, keyAES, privateKeyServer);
                         String hasilPasswordDecrypt = testPassword;
+                        
+                        
                         testPin = Security.Decrypt2(pin, keyAES, privateKeyServer);
                         salt = Security.Decrypt2(salt, keyAES, privateKeyServer);
                         System.out.println("150 : " + salt);
@@ -200,10 +210,11 @@ public class FormServer extends javax.swing.JFrame implements Runnable {
                         String allHash = hashUsername + hashPassword + hashPin ;
                         String allTest = testUsername + testPassword + testPin ;
                         
-                        
+                        System.out.println("209");
                         if((allTest).equals(allHash))
                         {
                             System.out.println("127");
+                            username = Security.DecryptRSA(username, privateKeyServer);
                             password = Security.Encrypt3(hasilPasswordDecrypt, keyAES, salt, publicKeyServer);
                             pin = Security.Encrypt3AfterHASH(testPin, keyAES, publicKeyServer);
                             respond = __user.Register(name, age, phoneNumber, username, password, pin,salt); //return TRUE or FALSE
@@ -251,13 +262,53 @@ public class FormServer extends javax.swing.JFrame implements Runnable {
                         news = clientInput[4];
                         timestamp = clientInput[5];
                         
-                        username = Security.Decrypt2(username, keyAES, privateKeyServer);
-                        destination = Security.Decrypt2(destination, keyAES, privateKeyServer);
-                        news = Security.Decrypt2(news, keyAES, privateKeyServer);
-                        nominal = Security.Decrypt2(nominal, keyAES, privateKeyServer);
+                        System.out.println("265");
+                                                
+                        testUsername = Security.Decrypt2(username, keyAES, privateKeyServer);
+                        testDestination = Security.Decrypt2(destination, keyAES, privateKeyServer);
+                        testNews = Security.Decrypt2(news, keyAES, privateKeyServer);
+                        testNominal = Security.Decrypt2(nominal, keyAES, privateKeyServer);
+                        
+                        String usernameTransfer = Security.DecryptRSA(username, privateKeyServer);
+                        String destinationTransfer = testDestination;
+                        String newsTransfer = testNews;
+                        String nominalTransfer = testNominal;
+                        
+                        System.out.println("277");
+                        
+                        testUsername = Security.MakeHash(testUsername, saltDefault);
+                        testDestination = Security.MakeHash(testDestination, saltDefault);
+                        testNews = Security.MakeHash(testNews, saltDefault);
+                        testNominal = Security.MakeHash(testNominal, saltDefault);
+                        
+                        System.out.println(clientInput[6]);
+                        System.out.println(clientInput[7]);
+                        System.out.println(clientInput[8]);
+                        System.out.println(clientInput[9]);
+                        
+                        hashUsername = Security.Decrypt3(clientInput[6], keyAES, saltDefault, privateKeyServer);
+                        hashDestination = Security.Decrypt3(clientInput[7], keyAES, saltDefault, privateKeyServer);
+                        hashNominal = Security.Decrypt3(clientInput[8], keyAES, saltDefault, privateKeyServer);
+                        hashNews = Security.Decrypt3(clientInput[9], keyAES, saltDefault, privateKeyServer);
+                        
+                        System.out.println("290");
+                        
+                        String allTestTransfer = testUsername + testDestination + testNews + testNominal;
+                        String allHashTransfer = hashUsername + hashDestination + hashNews + hashNominal;
+                        
+                        System.out.println("295");
+                        System.out.println(allTestTransfer);
+                        System.out.println(allHashTransfer);
+                        if(allTestTransfer.equals(allHashTransfer))
+                        {
+                            respond = __transaction.Transfer(usernameTransfer, destinationTransfer, nominalTransfer, newsTransfer, timestamp);
+                        }
+                        else  
+                        {
+                            respond = "Sorry Bambank";
+                        }
                         
                         
-                        respond = __transaction.Transfer(username, destination, nominal, news, timestamp);
                         break;
                     case "CHECKSALDO":
                         respond = "Try to Check Saldo";

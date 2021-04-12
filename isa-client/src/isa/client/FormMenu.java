@@ -54,6 +54,7 @@ public class FormMenu extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         btnMenuTransfer = new javax.swing.JButton();
         btnMenuInfoSaldo = new javax.swing.JButton();
+        buttonExit = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -73,6 +74,13 @@ public class FormMenu extends javax.swing.JFrame {
             }
         });
 
+        buttonExit.setText("Exit");
+        buttonExit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonExitActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -84,6 +92,10 @@ public class FormMenu extends javax.swing.JFrame {
                     .addComponent(btnMenuTransfer)
                     .addComponent(jLabel1))
                 .addContainerGap(229, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(buttonExit)
+                .addGap(32, 32, 32))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -94,7 +106,9 @@ public class FormMenu extends javax.swing.JFrame {
                 .addComponent(btnMenuTransfer)
                 .addGap(18, 18, 18)
                 .addComponent(btnMenuInfoSaldo)
-                .addContainerGap(73, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+                .addComponent(buttonExit)
+                .addContainerGap())
         );
 
         pack();
@@ -124,6 +138,10 @@ public class FormMenu extends javax.swing.JFrame {
             System.out.println("Error Info Saldo : " + e);
         }
     }//GEN-LAST:event_btnMenuInfoSaldoActionPerformed
+
+    private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_buttonExitActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -160,6 +178,7 @@ public class FormMenu extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnMenuInfoSaldo;
     private javax.swing.JButton btnMenuTransfer;
+    private javax.swing.JButton buttonExit;
     private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 }

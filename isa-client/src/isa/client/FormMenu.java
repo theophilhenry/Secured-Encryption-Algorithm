@@ -122,7 +122,7 @@ public class FormMenu extends javax.swing.JFrame {
 
     private void btnMenuInfoSaldoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuInfoSaldoActionPerformed
         // TODO add your handling code here:
-        
+         
         
         String usernameSaldo = Security.Encrypt2(userLogin, keyAES, publicKeyServer);
         String hashUsernameSaldo = Security.Encrypt3(userLogin, keyAES,saltDefault, publicKeyServer);
@@ -132,8 +132,27 @@ public class FormMenu extends javax.swing.JFrame {
             out.writeBytes(command + "\n");
 
             String output = in.readLine();
-            output = Security.Decrypt2(output, keyAES, privateKeyClient);
-            JOptionPane.showMessageDialog(rootPane, output);
+           
+            
+            
+            String[] serverInput = output.split("\\[_\\]");
+            
+            String result = serverInput[0];
+            String hashResult = serverInput[1];
+            result = Security.Decrypt2(result, keyAES, privateKeyClient);
+            String testResult = Security.MakeHash(result, saltDefault);
+            hashResult = Security.Decrypt3(hashResult, keyAES, saltDefault, privateKeyClient);
+            
+            if(testResult.equals(hashResult))
+            {
+                JOptionPane.showMessageDialog(rootPane, result);
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(rootPane,"Sorry the data is corrupted, please try again.");
+            }
+            
+            
         } catch (Exception e) {
             System.out.println("Error Info Saldo : " + e);
         }

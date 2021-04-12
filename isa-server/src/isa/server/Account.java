@@ -23,21 +23,21 @@ public class Account extends MyConnection {
         this.getConnect();
         String balance = "1";
         try {
-            System.out.println("21");
+          
             // Find Account Number from Username
             String sql = "SELECT * FROM accounts WHERE username = ?";
             PreparedStatement preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
             preparedStatement.setString(1, username);
-            System.out.println("26");
+           
             ResultSet result = preparedStatement.executeQuery();
             
             
             
             if (result.next()) {
                 balance = result.getString("balance");
-                System.out.println("Balance : " + balance);
+               
                 balance = Security.Decrypt2(balance, keyAES, privateKeyServer);
-                System.out.println("Balance 2: " + balance);
+               
                 // Decrypt?
             }
         } catch (Exception e) {

@@ -71,6 +71,8 @@ public class FormServer extends javax.swing.JFrame implements Runnable {
         String hashDestination;
         String hashNews;
         String hashNominal;
+        String hashRespond = "";
+        String hashTime;
         
         String testUsername;
         String testPassword;
@@ -81,6 +83,11 @@ public class FormServer extends javax.swing.JFrame implements Runnable {
         String testDestination;
         String testNominal;
         String testNews;
+        String testTime;
+        
+        int masukInfosaldo = 0;
+        
+        
 
         while (true) {
             try {
@@ -90,12 +97,12 @@ public class FormServer extends javax.swing.JFrame implements Runnable {
                 String[] clientInput = rawInput.split("\\[_\\]");
                 String respond = "";
                 
-                System.out.println("77 " + clientInput.length);
+              
                 
                 User __user = new User();
                 Transaction __transaction = new Transaction();
                 Account __account = new Account();
-                System.out.println("82");
+               
                 switch (clientInput[0]) {
                     case "LOGIN":
                         
@@ -105,16 +112,13 @@ public class FormServer extends javax.swing.JFrame implements Runnable {
                         testUsername = Security.Decrypt2(username, keyAES,privateKeyServer);
                         testPassword = Security.Decrypt2(password, keyAES, privateKeyServer);
                         
-                        System.out.println("username : " + testUsername);
-                        System.out.println("pass : " + testPassword);
-                        System.out.println("+++++++++++++++++++++++++");
-                        System.out.println("username : " + username);
+                        
                         
                         testUsername = Security.MakeHash(testUsername, saltDefault);
                         testPassword = Security.MakeHash(testPassword, saltDefault);
                         
                         
-                        System.out.println(testUsername + "  " + testPassword);
+                        
                         
                         // Hash
                         hashPassword = clientInput[3];
@@ -123,28 +127,27 @@ public class FormServer extends javax.swing.JFrame implements Runnable {
                         hashPassword = Security.Decrypt3(hashPassword, keyAES, saltDefault, privateKeyServer);
                         
                         
-                        System.out.println(hashUsername + " " + hashPassword);
-                        System.out.println("107");
+                        
                         
                         if((testUsername + testPassword).equals(hashUsername+hashPassword))
                         {
                             //password = Security.Encrypt3AfterHASH(hashPassword, keyAES, publicKeyServer);
                             username = Security.DecryptRSA(username, privateKeyServer);
                             password = Security.Decrypt2(password, keyAES, privateKeyServer);
-                            System.out.println("Password Akhir : " + password);
+                            
                             respond = __user.Login(username, password); //return TRUE or FALSE
                            
                         }
                         else
                         {
-                            respond = "Sorry Bambank";
+                            respond = "Sorry the data is corrupted, please try again.";
                         }
                         
                         
                         
                         break;
                     case "REGISTER":
-                        System.out.println("107");
+                        
                         name = clientInput[1];
                         age = clientInput[2];
                        
@@ -159,29 +162,20 @@ public class FormServer extends javax.swing.JFrame implements Runnable {
                                               
                         testUsername = Security.Decrypt2(username, keyAES,privateKeyServer);
                         testPassword = Security.Decrypt2(password, keyAES, privateKeyServer);
+                        
                         String hasilPasswordDecrypt = testPassword;
                         
                         
                         testPin = Security.Decrypt2(pin, keyAES, privateKeyServer);
                         salt = Security.Decrypt2(salt, keyAES, privateKeyServer);
-                        System.out.println("150 : " + salt);
+                        
                         testAge = Security.Decrypt2(age, keyAES, privateKeyServer);
                         testPhone = Security.Decrypt2(phoneNumber, keyAES, privateKeyServer);
                         testName = Security.Decrypt2(name, keyAES, privateKeyServer);
                         
-                        System.out.println("username : " + testUsername);
-                        System.out.println("pass : " + testPassword);
-                        System.out.println("pin : " + testPin);
-                        System.out.println("age : " + testAge);
-                        System.out.println("phone : " + testPhone);
-                        System.out.println("name : " + testName);
-                        System.out.println("+++++++++++++++++++++++++");
-                        System.out.println("username : " + username);
-                        System.out.println("pass : " + password);
-                        System.out.println("pin : " + pin);
-                        System.out.println("age : " + age);
-                        System.out.println("phone : " + phoneNumber);
-                        System.out.println("name : " + name);
+                        System.out.println(testAge);
+                        System.out.println(testPhone);
+                        System.out.println(testName);
                         
                         testUsername = Security.MakeHash(testUsername,  saltDefault);
                         testPassword = Security.MakeHash(testPassword,  saltDefault);
@@ -199,6 +193,7 @@ public class FormServer extends javax.swing.JFrame implements Runnable {
                         hashName = clientInput[12];
                         hashPhone = clientInput[13];
                         
+                        
                         hashUsername = Security.Decrypt3(hashUsername, keyAES, saltDefault, privateKeyServer);
                         hashPassword = Security.Decrypt3(hashPassword, keyAES, saltDefault, privateKeyServer);
                         hashPin = Security.Decrypt3(hashPin, keyAES, saltDefault, privateKeyServer);
@@ -207,13 +202,16 @@ public class FormServer extends javax.swing.JFrame implements Runnable {
                         hashPhone = Security.Decrypt3(hashPhone, keyAES, saltDefault, privateKeyServer);
                         
                         
+                        
+                        
+                        
                         String allHash = hashUsername + hashPassword + hashPin ;
                         String allTest = testUsername + testPassword + testPin ;
                         
-                        System.out.println("209");
+                        
                         if((allTest).equals(allHash))
                         {
-                            System.out.println("127");
+                           
                             username = Security.DecryptRSA(username, privateKeyServer);
                             password = Security.Encrypt3(hasilPasswordDecrypt, keyAES, salt, publicKeyServer);
                             pin = Security.Encrypt3AfterHASH(testPin, keyAES, publicKeyServer);
@@ -221,7 +219,7 @@ public class FormServer extends javax.swing.JFrame implements Runnable {
                         }
                         else
                         {
-                            respond = "Sorry Bambank";
+                            respond = "Sorry the data is corrupted, please try again.";
                         }
                         
                         
@@ -229,29 +227,34 @@ public class FormServer extends javax.swing.JFrame implements Runnable {
                         
                         break;
                     case "INFOSALDO":
-                        System.out.println("199");
+                       
                         
                         username = clientInput[1];
                         hashUsername = clientInput[2];
                         
                         testUsername = Security.Decrypt2(username, keyAES, privateKeyServer);
-                        System.out.println("Username Test 1: " + testUsername);
+                       
                         String usernameDecrypt2 = testUsername;
                         testUsername = Security.MakeHash(testUsername, saltDefault);
                         hashUsername = Security.Decrypt3(hashUsername, keyAES, saltDefault, privateKeyServer);
                                                                    
                         if (testUsername.equals(hashUsername))
                         {
-                            System.out.println("Username 1: " + username);
-                            System.out.println("Username Test 2: " + testUsername);
-                            //QXm68ly2QwS2RYlpE2zVEw==
+                           
+                            
                             username = Security.EncryptAES(usernameDecrypt2, keyAES);
-                            System.out.println("Username 3: " + username);
+                            
                             respond = __account.InfoSaldo(username);
+                            
+                            hashRespond = Security.Encrypt3(respond, keyAES,saltDefault,publicKeyClient);
+                            
+                            masukInfosaldo = 1;
+                           
+                            
                         }
                         else
                         {
-                            respond = "Sorry Bambank";
+                            respond = "Sorry the data is corrupted, please try again.";
                         }
                         
                         break;
@@ -262,50 +265,49 @@ public class FormServer extends javax.swing.JFrame implements Runnable {
                         news = clientInput[4];
                         timestamp = clientInput[5];
                         
-                        System.out.println("265");
+                       
                                                 
                         testUsername = Security.Decrypt2(username, keyAES, privateKeyServer);
                         testDestination = Security.Decrypt2(destination, keyAES, privateKeyServer);
                         testNews = Security.Decrypt2(news, keyAES, privateKeyServer);
                         testNominal = Security.Decrypt2(nominal, keyAES, privateKeyServer);
+                        testTime = Security.Decrypt2(timestamp,keyAES,privateKeyServer);
                         
                         String usernameTransfer = Security.DecryptRSA(username, privateKeyServer);
                         String destinationTransfer = testDestination;
                         String newsTransfer = testNews;
                         String nominalTransfer = testNominal;
+                        String time = testTime;
                         
-                        System.out.println("277");
+                       
                         
                         testUsername = Security.MakeHash(testUsername, saltDefault);
                         testDestination = Security.MakeHash(testDestination, saltDefault);
                         testNews = Security.MakeHash(testNews, saltDefault);
                         testNominal = Security.MakeHash(testNominal, saltDefault);
+                        testTime = Security.MakeHash(testTime,saltDefault);
                         
-                        System.out.println(clientInput[6]);
-                        System.out.println(clientInput[7]);
-                        System.out.println(clientInput[8]);
-                        System.out.println(clientInput[9]);
+                       
                         
                         hashUsername = Security.Decrypt3(clientInput[6], keyAES, saltDefault, privateKeyServer);
                         hashDestination = Security.Decrypt3(clientInput[7], keyAES, saltDefault, privateKeyServer);
                         hashNominal = Security.Decrypt3(clientInput[8], keyAES, saltDefault, privateKeyServer);
                         hashNews = Security.Decrypt3(clientInput[9], keyAES, saltDefault, privateKeyServer);
+                        hashTime = Security.Decrypt3(clientInput[10],keyAES,saltDefault,privateKeyServer);
                         
-                        System.out.println("290");
                         
-                        String allTestTransfer = testUsername + testDestination + testNews + testNominal;
-                        String allHashTransfer = hashUsername + hashDestination + hashNews + hashNominal;
                         
-                        System.out.println("295");
-                        System.out.println(allTestTransfer);
-                        System.out.println(allHashTransfer);
+                        String allTestTransfer = testUsername + testDestination + testNews + testNominal + testTime;
+                        String allHashTransfer = hashUsername + hashDestination + hashNews + hashNominal + hashTime;
+                        
+                        
                         if(allTestTransfer.equals(allHashTransfer))
                         {
-                            respond = __transaction.Transfer(usernameTransfer, destinationTransfer, nominalTransfer, newsTransfer, timestamp);
+                            respond = __transaction.Transfer(usernameTransfer, destinationTransfer, nominalTransfer, newsTransfer, time);
                         }
                         else  
                         {
-                            respond = "Sorry Bambank";
+                            respond = "Sorry the data is corrupted, please try again.";
                         }
                         
                         
@@ -322,11 +324,25 @@ public class FormServer extends javax.swing.JFrame implements Runnable {
                 
                 
                 
-                System.out.println(respond);
+                
                 
                 respond = Security.Encrypt2(respond, keyAES, publicKeyClient);
+               
+                if(masukInfosaldo == 1)
+                {
+                    
+                    respond +=  "[_]" + hashRespond; 
+                    
+                    out.writeBytes(respond + "\n");
+                    
+                    masukInfosaldo = 0;
+                }
+                else
+                {
+                    out.writeBytes(respond + "\n");
+                }
                 
-                out.writeBytes(respond + "\n");
+                
 
             } catch (Exception e) {
                 System.out.println("Error Multithread : " + e);

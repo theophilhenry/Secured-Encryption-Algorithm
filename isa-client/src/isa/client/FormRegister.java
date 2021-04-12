@@ -195,7 +195,19 @@ public class FormRegister extends javax.swing.JFrame {
         String pin = String.valueOf(txtPin.getPassword());
         
         String salt = Security.MakeSalt();
-        System.out.println("198 : " + salt);
+        System.out.println("DATA ASLI : ");
+        System.out.println("Name : " + name);
+        System.out.println("Age : " + age);
+        System.out.println("Phone Number : " + phoneNumber);
+        System.out.println("Username : " + username);
+        System.out.println("Password : " + password);
+        System.out.println("Pin : " + pin);
+        System.out.println("Salt : " + salt); 
+        System.out.println("\n\n");
+        
+       
+        
+       
         
         salt = Security.Encrypt2(salt, keyAES, publicKeyServer);
                 
@@ -215,13 +227,26 @@ public class FormRegister extends javax.swing.JFrame {
         password = Security.Encrypt2(password, keyAES, publicKeyServer);
         pin = Security.Encrypt2(pin, keyAES, publicKeyServer);
         
-                
+        System.out.println("DATA ENCRYPT2(AES-RSA) : ");
+        System.out.println("Name : " + name);
+        System.out.println("Age : " + age);
+        System.out.println("Phone Number : " + phoneNumber);
+        System.out.println("Username : " + username);
+        System.out.println("Password : " + password);
+        System.out.println("Pin : " + pin);
+        System.out.println("Salt : " + salt); 
+        
+        System.out.println("DATA ENCRYPT2(AES-RSA) : ");
+        System.out.println("Name : " + nameHash);
+        System.out.println("Age : " + ageHash);
+        System.out.println("Phone Number : " + phoneHash);
+        System.out.println("Username : " + usernameHash);
+        System.out.println("Password : " + passwordHash);
+        System.out.println("Pin : " + pinHash);
         
         
-               
-        System.out.println(usernameHash);
-        System.out.println(passwordHash);
-        System.out.println(pinHash);
+        
+       
         
 
        // Encrypt and Hash the username and password here

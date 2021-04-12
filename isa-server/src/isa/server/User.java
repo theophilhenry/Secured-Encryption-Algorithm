@@ -21,7 +21,7 @@ public class User extends MyConnection {
             String salt = "--later--"; // Untuk pengecekan
             String pass = "";
             
-            System.out.println("25");
+           
 
             String sqlSalt = "SELECT salt,password FROM accounts WHERE username = ?";
             PreparedStatement preparedStatement = (PreparedStatement) connect.prepareStatement(sqlSalt);
@@ -40,12 +40,11 @@ public class User extends MyConnection {
             pass = result.getString("password");
             
             password = Security.MakeHash(password, salt);
-            System.out.println("User Hash pass : " + password);
-            System.out.println("pass DB : " + pass);
+           
             
             pass = Security.Decrypt3(pass, keyAES, salt, privateKeyServer);
             
-            System.out.println("Password decrypt : " + pass);
+            
             if (!(pass.equals(password))) {
                 return "FALSE";
             }
@@ -82,13 +81,13 @@ public class User extends MyConnection {
         String accountNumber = generateAccountNumber();
 
         try {
-            System.out.println("83");
+           
             String sql = "INSERT INTO persons (name, age, phoneNumber) values (?, ?, ?)";
             PreparedStatement preparedStatement = (PreparedStatement) connect.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, name);
             preparedStatement.setString(2, age);
             preparedStatement.setString(3, phoneNumber);
-            System.out.println("89");
+           
             preparedStatement.executeUpdate();
             ResultSet rs = preparedStatement.getGeneratedKeys();
             int generatedKey = 0;

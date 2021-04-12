@@ -153,31 +153,35 @@ public class FormTransfer extends javax.swing.JFrame {
         String nominal = txtNominal.getText();
         String news = txtNews.getText();
         Timestamp timeNow = new Timestamp(new Date().getTime());
-
+        
+        String time = String.valueOf(timeNow);
+        
         // Encrypt and Hash here
         // ...
-        
+        String hashDestination = Security.Encrypt3(destination, keyAES,saltDefault, publicKeyServer);
+        String hashNominal = Security.Encrypt3(nominal, keyAES,saltDefault, publicKeyServer);
+        String hashUsername = Security.Encrypt3(username, keyAES,saltDefault, publicKeyServer);
+        String hashNews = Security.Encrypt3(news, keyAES,saltDefault, publicKeyServer);
+        String hashTime = Security.Encrypt3(time, keyAES, saltDefault, publicKeyServer);
         
         destination = Security.Encrypt2(destination, keyAES, publicKeyServer);
         nominal = Security.Encrypt2(nominal, keyAES, publicKeyServer);
         username = Security.Encrypt2(username, keyAES, publicKeyServer);
         news = Security.Encrypt2(news, keyAES, publicKeyServer);
+        time = Security.Encrypt2(time, keyAES, publicKeyServer);
         
-        String hashDestination = Security.Encrypt3(destination, keyAES,saltDefault, publicKeyServer);
-        String hashNominal = Security.Encrypt3(nominal, keyAES,saltDefault, publicKeyServer);
-        String hashUsername = Security.Encrypt3(username, keyAES,saltDefault, publicKeyServer);
-        String hashNews = Security.Encrypt3(news, keyAES,saltDefault, publicKeyServer);
         
         String command = "TRANSFER"
                 + "[_]" + username
                 + "[_]" + destination
                 + "[_]" + nominal
                 + "[_]" + news
-                + "[_]" + timeNow
+                + "[_]" + time
                 + "[_]" + hashUsername
                 + "[_]" + hashDestination
                 + "[_]" + hashNominal
-                + "[_]" + hashNews;
+                + "[_]" + hashNews
+                + "[_]" + hashTime;
         
 
         try {

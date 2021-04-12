@@ -156,6 +156,16 @@ public class FormTransfer extends javax.swing.JFrame {
         
         String time = String.valueOf(timeNow);
         
+        
+         System.out.println("\nTRANSFER -------------------------------------------------------------------------------------");
+          System.out.println("DATA ASLI : ");
+        System.out.println("Pengirim : " + username);
+        System.out.println("Tujuan : " + destination);
+        System.out.println("Nominal : " + nominal);
+        System.out.println("News : " + news); 
+         System.out.println("Waktu : " + time); 
+        System.out.println("\n");
+        
         // Encrypt and Hash here
         // ...
         String hashDestination = Security.Encrypt3(destination, keyAES,saltDefault, publicKeyServer);
@@ -170,6 +180,21 @@ public class FormTransfer extends javax.swing.JFrame {
         news = Security.Encrypt2(news, keyAES, publicKeyServer);
         time = Security.Encrypt2(time, keyAES, publicKeyServer);
         
+         System.out.println("DATA ENCRYPT2(AES-RSA) : ");
+        System.out.println("Pengirim : " + username);
+        System.out.println("Tujuan : " + destination);
+        System.out.println("Nominal : " + nominal);
+        System.out.println("News : " + news); 
+        System.out.println("Waktu : " + time); 
+        System.out.println("\n");
+        
+        System.out.println("DATA ENCRYPT3(HASH-RSA-AES) : ");
+        System.out.println("Pengirim : " + hashUsername);
+        System.out.println("Tujuan : " + hashDestination);
+        System.out.println("Nominal : " + hashNominal);
+        System.out.println("News : " + hashNews); 
+        System.out.println("Waktu : " + hashTime); 
+        System.out.println("\n");
         
         String command = "TRANSFER"
                 + "[_]" + username
@@ -188,7 +213,9 @@ public class FormTransfer extends javax.swing.JFrame {
             out.writeBytes(command + "\n");
 
             String output = in.readLine();
+            System.out.println("\noutput : " + output);
             output = Security.Decrypt2(output, keyAES, privateKeyClient);
+            System.out.println("\noutput after decrypt : " + output);
             JOptionPane.showMessageDialog(rootPane, output);
         } catch (Exception e) {
             System.out.println("Error Transfer : " + e);

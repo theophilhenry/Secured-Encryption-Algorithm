@@ -195,7 +195,9 @@ public class FormRegister extends javax.swing.JFrame {
         String pin = String.valueOf(txtPin.getPassword());
         
         String salt = Security.MakeSalt();
-        System.out.println("DATA ASLI : ");
+       
+        System.out.println("\nREGISTER -------------------------------------------------------------------------------------");
+          System.out.println("DATA ASLI : ");
         System.out.println("Name : " + name);
         System.out.println("Age : " + age);
         System.out.println("Phone Number : " + phoneNumber);
@@ -203,16 +205,14 @@ public class FormRegister extends javax.swing.JFrame {
         System.out.println("Password : " + password);
         System.out.println("Pin : " + pin);
         System.out.println("Salt : " + salt); 
-        System.out.println("\n\n");
-        
-       
+        System.out.println("\n");
         
        
         
         salt = Security.Encrypt2(salt, keyAES, publicKeyServer);
                 
-        String nameHash = Security.Encrypt3(age, keyAES, saltDefault, publicKeyServer);
-        String ageHash = Security.Encrypt3(name, keyAES, saltDefault, publicKeyServer);
+        String nameHash = Security.Encrypt3(name, keyAES, saltDefault, publicKeyServer);
+        String ageHash = Security.Encrypt3(age, keyAES, saltDefault, publicKeyServer);
         String phoneHash = Security.Encrypt3(phoneNumber, keyAES, saltDefault, publicKeyServer);
         String usernameHash = Security.Encrypt3(username, keyAES, saltDefault, publicKeyServer);
         String passwordHash = Security.Encrypt3(password, keyAES, saltDefault, publicKeyServer);
@@ -227,6 +227,8 @@ public class FormRegister extends javax.swing.JFrame {
         password = Security.Encrypt2(password, keyAES, publicKeyServer);
         pin = Security.Encrypt2(pin, keyAES, publicKeyServer);
         
+      
+        
         System.out.println("DATA ENCRYPT2(AES-RSA) : ");
         System.out.println("Name : " + name);
         System.out.println("Age : " + age);
@@ -236,7 +238,9 @@ public class FormRegister extends javax.swing.JFrame {
         System.out.println("Pin : " + pin);
         System.out.println("Salt : " + salt); 
         
-        System.out.println("DATA ENCRYPT2(AES-RSA) : ");
+        System.out.println("\n");
+        
+        System.out.println("DATA ENCRYPT3(HASH-RSA-AES) : ");
         System.out.println("Name : " + nameHash);
         System.out.println("Age : " + ageHash);
         System.out.println("Phone Number : " + phoneHash);
@@ -272,7 +276,9 @@ public class FormRegister extends javax.swing.JFrame {
             out.writeBytes(command + "\n");
 
             String output = in.readLine();
+            System.out.println("output : " + output);
             output = Security.Decrypt2(output, keyAES, privateKeyClient);
+            System.out.println("output after decrypt : " + output);
             JOptionPane.showMessageDialog(rootPane, output);
         } catch (Exception e) {
             System.out.println("Error Register : " + e);

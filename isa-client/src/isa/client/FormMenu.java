@@ -126,6 +126,24 @@ public class FormMenu extends javax.swing.JFrame {
         
         String usernameSaldo = Security.Encrypt2(userLogin, keyAES, publicKeyServer);
         String hashUsernameSaldo = Security.Encrypt3(userLogin, keyAES,saltDefault, publicKeyServer);
+        
+        System.out.println("\nINFO SALDO -------------------------------------------------------------------------------------");
+        System.out.println("DATA ASLI : ");
+        System.out.println("Username : " + userLogin);
+        System.out.println("\n");
+        System.out.println("DATA ENCRYPT2(AES-RSA) : ");
+        System.out.println("Username : " + usernameSaldo);
+        System.out.println("\n");
+        System.out.println("DATA ENCRYPT3(HASH-RSA-AES) : ");
+        System.out.println("Username : " + hashUsernameSaldo);
+       
+        
+        
+        
+        
+        
+        
+        
         String command = "INFOSALDO" + "[_]" + usernameSaldo + "[_]" + hashUsernameSaldo;
 
         try {
@@ -139,9 +157,21 @@ public class FormMenu extends javax.swing.JFrame {
             
             String result = serverInput[0];
             String hashResult = serverInput[1];
+            
+           
+            
             result = Security.Decrypt2(result, keyAES, privateKeyClient);
             String testResult = Security.MakeHash(result, saltDefault);
             hashResult = Security.Decrypt3(hashResult, keyAES, saltDefault, privateKeyClient);
+            
+             System.out.println("\nINFO SALDO DARI SERVER -------------------------------------------------------------------------------------");
+            System.out.println("DATA ASLI : ");
+            System.out.println("Saldo : " + result);
+            System.out.println("\n");
+            System.out.println("DATA ENCRYPT2(AES-RSA) : ");
+            System.out.println("Saldo : " + serverInput[0]);
+            System.out.println("\n");
+           
             
             if(testResult.equals(hashResult))
             {

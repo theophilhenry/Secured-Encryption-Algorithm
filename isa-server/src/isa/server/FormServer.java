@@ -109,24 +109,42 @@ public class FormServer extends javax.swing.JFrame implements Runnable {
                         // Input into Hash
                         username = clientInput[1];
                         password = clientInput[2];
+                        
+                        
                         testUsername = Security.Decrypt2(username, keyAES,privateKeyServer);
                         testPassword = Security.Decrypt2(password, keyAES, privateKeyServer);
-                        
+                         txtConversation.append("\nLOGIN -------------------------------------------------------------------------------------\n");
+                         txtConversation.append("DATA ASLI : " + "\n");
+                         txtConversation.append("Username : " + testUsername + "\n");
+                        txtConversation.append("Password : " + testPassword + "\n");
+                        txtConversation.append("\n");
                         
                         
                         testUsername = Security.MakeHash(testUsername, saltDefault);
                         testPassword = Security.MakeHash(testPassword, saltDefault);
                         
                         
+                      txtConversation.append("DATA ENCRYPT2(AES-RSA) : "  + "\n");
+                      txtConversation.append("Username : " + username + "\n");
+                      txtConversation.append("Password : " + password + "\n");
+                    
+
+                      txtConversation.append("\n");
+                        
+                      
                         
                         
                         // Hash
                         hashPassword = clientInput[3];
                         hashUsername = clientInput[4];
+                          txtConversation.append("DATA ENCRYPT3(HASH-RSA-AES) : " + "\n");
+                        txtConversation.append("Username : " + hashUsername + "\n");
+                        txtConversation.append("Password : " + hashPassword + "\n");
                         hashUsername = Security.Decrypt3(hashUsername, keyAES, saltDefault, privateKeyServer);
                         hashPassword = Security.Decrypt3(hashPassword, keyAES, saltDefault, privateKeyServer);
                         
                         
+                       
                         
                         
                         if((testUsername + testPassword).equals(hashUsername+hashPassword))
@@ -157,7 +175,10 @@ public class FormServer extends javax.swing.JFrame implements Runnable {
                         pin = clientInput[6];
                         salt = clientInput[7];
                         
-                        
+                          
+
+                           
+        
                         
                                               
                         testUsername = Security.Decrypt2(username, keyAES,privateKeyServer);
@@ -165,6 +186,7 @@ public class FormServer extends javax.swing.JFrame implements Runnable {
                         
                         String hasilPasswordDecrypt = testPassword;
                         
+                        String saltBlmEncrypt = salt;
                         
                         testPin = Security.Decrypt2(pin, keyAES, privateKeyServer);
                         salt = Security.Decrypt2(salt, keyAES, privateKeyServer);
@@ -172,19 +194,26 @@ public class FormServer extends javax.swing.JFrame implements Runnable {
                         testAge = Security.Decrypt2(age, keyAES, privateKeyServer);
                         testPhone = Security.Decrypt2(phoneNumber, keyAES, privateKeyServer);
                         testName = Security.Decrypt2(name, keyAES, privateKeyServer);
+                        txtConversation.append("\nREGISTER -------------------------------------------------------------------------------------\n");
+                        txtConversation.append("DATA ASLI : " + "\n");
+                        txtConversation.append("Name : " + testName + "\n");
+                        txtConversation.append("Age : " + testAge + "\n");
+                        txtConversation.append("Phone Number : " + testPhone + "\n");
+                        txtConversation.append("Username : " + testUsername + "\n");
+                        txtConversation.append("Password : " + testPassword + "\n");
+                        txtConversation.append("Pin : " + testPin + "\n");
+                        txtConversation.append("Salt : " + salt + "\n"); 
+                        txtConversation.append("\n");
                         
-                        System.out.println(testAge);
-                        System.out.println(testPhone);
-                        System.out.println(testName);
                         
+                      
                         testUsername = Security.MakeHash(testUsername,  saltDefault);
                         testPassword = Security.MakeHash(testPassword,  saltDefault);
                         testPin = Security.MakeHash(testPin, saltDefault);
                         testName = Security.MakeHash(testName,  saltDefault);
                         testAge = Security.MakeHash(testAge,  saltDefault);
                         testPhone = Security.MakeHash(testPhone, saltDefault);
-                        
-                        
+                      
                         
                         hashUsername = clientInput[8];
                         hashPassword = clientInput[9];
@@ -192,6 +221,27 @@ public class FormServer extends javax.swing.JFrame implements Runnable {
                         hashAge = clientInput[11];
                         hashName = clientInput[12];
                         hashPhone = clientInput[13];
+                        
+                      
+
+                      txtConversation.append("DATA ENCRYPT2(AES-RSA) : "  + "\n");
+                      txtConversation.append("Name : " + name + "\n");
+                      txtConversation.append("Age : " + age + "\n");
+                      txtConversation.append("Phone Number : " + phoneNumber + "\n");
+                      txtConversation.append("Username : " + username + "\n");
+                      txtConversation.append("Password : " + password + "\n");
+                      txtConversation.append("Pin : " + pin + "\n");
+                      txtConversation.append("Salt : " + saltBlmEncrypt + "\n"); 
+
+                      txtConversation.append("\n");
+                        
+                        txtConversation.append("DATA ENCRYPT3(HASH-RSA-AES) : " + "\n");
+                        txtConversation.append("Name : " + hashUsername + "\n");
+                        txtConversation.append("Age : " + hashAge + "\n");
+                        txtConversation.append("Phone Number : " + hashPhone + "\n");
+                        txtConversation.append("Username : " + hashUsername + "\n");
+                        txtConversation.append("Password : " + hashPassword + "\n");
+                        txtConversation.append("Pin : " + hashPin + "\n");
                         
                         
                         hashUsername = Security.Decrypt3(hashUsername, keyAES, saltDefault, privateKeyServer);
@@ -202,11 +252,10 @@ public class FormServer extends javax.swing.JFrame implements Runnable {
                         hashPhone = Security.Decrypt3(hashPhone, keyAES, saltDefault, privateKeyServer);
                         
                         
+                       
                         
-                        
-                        
-                        String allHash = hashUsername + hashPassword + hashPin ;
-                        String allTest = testUsername + testPassword + testPin ;
+                        String allHash = hashUsername + hashPassword + hashPin + hashAge + hashName + hashPhone;
+                        String allTest = testUsername + testPassword + testPin + testAge + testName + testPhone;
                         
                         
                         if((allTest).equals(allHash))
@@ -227,16 +276,29 @@ public class FormServer extends javax.swing.JFrame implements Runnable {
                         
                         break;
                     case "INFOSALDO":
-                       
+                        txtConversation.append("\nINFO SALDO -------------------------------------------------------------------------------------\n");
                         
                         username = clientInput[1];
                         hashUsername = clientInput[2];
                         
                         testUsername = Security.Decrypt2(username, keyAES, privateKeyServer);
                        
+                         txtConversation.append("DATA ASLI : " + "\n");
+                        txtConversation.append("Username : " + testUsername + "\n"); 
+                        txtConversation.append("\n");
+                        
                         String usernameDecrypt2 = testUsername;
                         testUsername = Security.MakeHash(testUsername, saltDefault);
                         hashUsername = Security.Decrypt3(hashUsername, keyAES, saltDefault, privateKeyServer);
+                        
+                        
+                        
+                       
+                        txtConversation.append("DATA ENCRYPT2(AES-RSA) : "  + "\n");
+                        txtConversation.append("Username : " + clientInput[1] + "\n"); 
+                        txtConversation.append("\n");
+                        txtConversation.append("DATA ENCRYPT3(HASH-RSA-AES) : " + "\n");
+                        txtConversation.append("Username : " + clientInput[2] + "\n");
                                                                    
                         if (testUsername.equals(hashUsername))
                         {
@@ -259,6 +321,9 @@ public class FormServer extends javax.swing.JFrame implements Runnable {
                         
                         break;
                     case "TRANSFER":
+                        
+                         txtConversation.append("\nTRANSFER -------------------------------------------------------------------------------------\n");
+                        
                         username = clientInput[1];
                         destination = clientInput[2];
                         nominal = clientInput[3];
@@ -272,6 +337,16 @@ public class FormServer extends javax.swing.JFrame implements Runnable {
                         testNews = Security.Decrypt2(news, keyAES, privateKeyServer);
                         testNominal = Security.Decrypt2(nominal, keyAES, privateKeyServer);
                         testTime = Security.Decrypt2(timestamp,keyAES,privateKeyServer);
+                        
+                        txtConversation.append("DATA ASLI : " + "\n");
+                        txtConversation.append("Pengirim : " + testUsername + "\n");
+                        txtConversation.append("Tujuan : " + testDestination + "\n");
+                        txtConversation.append("Nominal : " + testNominal + "\n");
+                        txtConversation.append("News : " + testNews + "\n"); 
+                         txtConversation.append("Waktu : " + testTime + "\n"); 
+                        txtConversation.append("\n");
+                        
+                        
                         
                         String usernameTransfer = Security.DecryptRSA(username, privateKeyServer);
                         String destinationTransfer = testDestination;
@@ -288,6 +363,23 @@ public class FormServer extends javax.swing.JFrame implements Runnable {
                         testTime = Security.MakeHash(testTime,saltDefault);
                         
                        
+                         txtConversation.append("DATA ENCRYPT2(AES-RSA) : "  + "\n");
+                      txtConversation.append("Pengirim : " + username + "\n");
+                        txtConversation.append("Tujuan : " + destination + "\n");
+                        txtConversation.append("Nominal : " + nominal + "\n");
+                        txtConversation.append("News : " + news + "\n"); 
+                         txtConversation.append("Waktu : " + timestamp + "\n"); 
+                        txtConversation.append("\n");
+                      txtConversation.append("\n");
+                        
+                        txtConversation.append("DATA ENCRYPT3(HASH-RSA-AES) : " + "\n");
+                        txtConversation.append("Pengirim : " + clientInput[6] + "\n");
+                        txtConversation.append("Tujuan : " + clientInput[7]+ "\n");
+                        txtConversation.append("Nominal : " + clientInput[8] + "\n");
+                        txtConversation.append("News : " + clientInput[9]+ "\n"); 
+                         txtConversation.append("Waktu : " + clientInput[10] + "\n"); 
+                        txtConversation.append("\n");
+                        
                         
                         hashUsername = Security.Decrypt3(clientInput[6], keyAES, saltDefault, privateKeyServer);
                         hashDestination = Security.Decrypt3(clientInput[7], keyAES, saltDefault, privateKeyServer);
@@ -327,7 +419,9 @@ public class FormServer extends javax.swing.JFrame implements Runnable {
                 
                 
                 respond = Security.Encrypt2(respond, keyAES, publicKeyClient);
-               
+                
+                
+                
                 if(masukInfosaldo == 1)
                 {
                     
@@ -336,9 +430,12 @@ public class FormServer extends javax.swing.JFrame implements Runnable {
                     out.writeBytes(respond + "\n");
                     
                     masukInfosaldo = 0;
+                    
+                    txtConversation.append("Respond : " + respond + "\n");
                 }
                 else
                 {
+                     txtConversation.append("Respond : " + respond + "\n");
                     out.writeBytes(respond + "\n");
                 }
                 

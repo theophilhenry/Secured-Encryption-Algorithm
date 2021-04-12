@@ -126,10 +126,25 @@ public class FormLogin extends javax.swing.JFrame {
         
         String hashUsername = Security.Encrypt3(username, keyAES,saltDefault, publicKeyServer);
         String hashPassword = Security.Encrypt3(password, keyAES, saltDefault, publicKeyServer);
+        System.out.println("\nLOGIN -------------------------------------------------------------------------------------");
+        System.out.println("DATA ASLI : ");
+        System.out.println("Username : " + username);
+        System.out.println("Password : " + password);
+        System.out.println("\n");
         
         username = Security.Encrypt2(username, keyAES,publicKeyServer);
         password = Security.Encrypt2(password, keyAES,  publicKeyServer);
         
+        System.out.println("DATA ENCRYPT2(AES-RSA) : ");
+        System.out.println("Username : " + username);
+        System.out.println("Password : " + password);
+        System.out.println("\n");
+
+        System.out.println("DATA ENCRYPT3(HASH-RSA-AES) : ");
+        System.out.println("Username : " + hashUsername);
+        System.out.println("Password : " + hashPassword);
+        
+            
         
 
         //Encrypt and Hash the username and password here
@@ -139,7 +154,9 @@ public class FormLogin extends javax.swing.JFrame {
             out.writeBytes(command + "\n");
             
             String output = in.readLine();
+            System.out.println("\noutput : " + output);
             output = Security.Decrypt2(output, keyAES, privateKeyClient);
+            System.out.println("\noutput after decrypt: " + output);
             JOptionPane.showMessageDialog(rootPane, output);
             
             if(output.equalsIgnoreCase("TRUE")){
